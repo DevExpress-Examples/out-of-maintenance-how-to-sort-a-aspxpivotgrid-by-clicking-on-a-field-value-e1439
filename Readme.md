@@ -1,3 +1,10 @@
+<!-- default file list -->
+*Files to look at*:
+
+* [Solution.sln](./CS/Solution.sln)
+* [Default.aspx](./CS/WebSite/Default.aspx) (VB: [Default.aspx](./VB/WebSite/Default.aspx))
+* [Default.aspx.cs](./CS/WebSite/Default.aspx.cs) (VB: [Default.aspx](./VB/WebSite/Default.aspx))
+<!-- default file list end -->
 # How to sort a ASPxPivotGrid by clicking on a field value
 
 
