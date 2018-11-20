@@ -63,7 +63,7 @@ public partial class _Default : System.Web.UI.Page {
             for (int i = 0; i <= clickedField.AreaIndex; i++) {
                 var field = pivotGrid.GetFieldByArea(area, i);
                 fields.Add(field);
-                object value = pivotGrid.GetFieldValueByIndex(field, visibleIndex);
+                object value = pivotGrid.GetFieldValue(field, visibleIndex);
                 values.Add(value);
             }
         }
@@ -111,7 +111,7 @@ public class FieldValueTemplate : ITemplate {
         res.Append(pivotGrid.ClientInstanceName).Append(".PerformCallback('SC|");
         res.Append(GetFieldIndex(c.ValueItem)).Append("|")
             .Append(c.ValueItem.IsColumn).Append("|")
-            .Append(c.ValueItem.VisibleIndex).Append("|")
+            .Append(c.ValueItem.MaxLastLevelIndex).Append("|")
             .Append(c.ValueItem.DataIndex);
         res.Append("');");
         return res.ToString();
