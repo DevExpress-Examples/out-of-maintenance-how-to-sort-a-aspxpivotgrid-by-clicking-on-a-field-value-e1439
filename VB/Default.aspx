@@ -18,7 +18,11 @@
                 </dxwpg:PivotGridField>
                 <dxwpg:PivotGridField ID="fieldProductName" Area="RowArea" AreaIndex="1" FieldName="ProductName">
                 </dxwpg:PivotGridField>
-                <dxwpg:PivotGridField ID="fieldProductSales" Area="DataArea" AreaIndex="0" FieldName="ProductSales">
+                <dxwpg:PivotGridField ID="fieldProductSales" Area="DataArea" AreaIndex="0" FieldName="ProductSales" 
+                    Caption="Sales">
+                </dxwpg:PivotGridField>
+                <dxwpg:PivotGridField ID="fieldSalesCount" Area="DataArea" AreaIndex="1" FieldName="ProductSales" 
+                    Caption="Count" SummaryType="Count">
                 </dxwpg:PivotGridField>
                 <dxwpg:PivotGridField ID="fieldShippedDate" Area="ColumnArea" AreaIndex="0" FieldName="ShippedDate"
                     GroupInterval="DateYear" UnboundFieldName="fieldShippedDate">

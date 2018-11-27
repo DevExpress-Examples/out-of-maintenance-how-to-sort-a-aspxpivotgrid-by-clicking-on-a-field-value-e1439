@@ -1,4 +1,6 @@
-﻿Imports System
+﻿Option Infer On
+
+Imports System
 Imports System.Data
 Imports System.Configuration
 Imports System.Web
@@ -53,16 +55,18 @@ Partial Public Class _Default
     End Sub
 
     Private Sub GetFieldsAndValues(ByVal pivotGrid As ASPxPivotGrid, ByVal fieldIndex As Integer, ByVal visibleIndex As Integer, ByVal dataIndex As Integer, ByVal area As PivotArea, ByRef dataField As PivotGridField, ByRef fields As List(Of PivotGridField), ByRef values As List(Of Object))
+        fields = New List(Of PivotGridField)()
+        values = New List(Of Object)()
         dataField = pivotGrid.GetFieldByArea(PivotArea.DataArea, dataIndex)
-        fields = pivotGrid.GetFieldsByArea(area)
-        values = New List(Of Object)(fields.Count)
-        For i As Integer = 0 To fields.Count - 1
-            Dim value As Object = pivotGrid.GetFieldValueByIndex(fields(i), visibleIndex)
-            values.Add(value)
-            If fields(i).Index = fieldIndex Then
-                Exit For
-            End If
-        Next i
+        If fieldIndex >= 0 Then
+            Dim clickedField = pivotGrid.Fields(fieldIndex)
+            For i As Integer = 0 To clickedField.AreaIndex
+                Dim field = pivotGrid.GetFieldByArea(area, i)
+                fields.Add(field)
+                Dim value As Object = pivotGrid.GetFieldValue(field, visibleIndex)
+                values.Add(value)
+            Next i
+        End If
     End Sub
 
     Private Function GetCrossArea(ByVal isColumn As Boolean) As PivotArea
@@ -93,34 +97,38 @@ Public Class FieldValueTemplate
 
     Public Sub InstantiateIn(ByVal container As Control) Implements ITemplate.InstantiateIn
         Dim c As PivotGridFieldValueTemplateContainer = CType(container, PivotGridFieldValueTemplateContainer)
+        Dim cell As PivotGridFieldValueHtmlCell = c.CreateFieldValue()
+        If c.ValueItem.CanShowSortBySummary AndAlso Not c.ValueItem.IsAnyFieldSortedByThisValue Then
+            cell.Controls.AddAt(cell.Controls.IndexOf(cell.TextControl), GetHyperLink(c))
+            cell.Controls.Remove(cell.TextControl)
+        End If
+        c.Controls.Add(cell)
+    End Sub
+
+    Private Function GetHyperLink(ByVal c As PivotGridFieldValueTemplateContainer) As Control
         Dim link As New HyperLink()
         link.Text = CStr(c.Text)
         link.NavigateUrl = "#"
         link.Attributes("onclick") = GetOnClickHandler(c)
-        c.Controls.Add(link)
-        Dim isSortedByColumn As Boolean = GetIsSortedByColumn(c)
-        If isSortedByColumn Then
-            c.Controls.Add(New LiteralControl("&nbsp;*"))
-        End If
-    End Sub
-
-    Private Function GetIsSortedByColumn(ByVal c As PivotGridFieldValueTemplateContainer) As Boolean
-        Dim sortedFields As List(Of PivotGridFieldPair) = PivotGrid.Data.VisualItems.GetSortedBySummaryFields(c.ValueItem.IsColumn, c.ValueItem.Index)
-        Dim isSortedByColumn As Boolean = sortedFields IsNot Nothing AndAlso sortedFields.Count > 0
-        Return isSortedByColumn
+        Return link
     End Function
 
     Private Function GetOnClickHandler(ByVal c As PivotGridFieldValueTemplateContainer) As String
         Dim res As New StringBuilder()
         res.Append(pivotGrid_Renamed.ClientInstanceName).Append(".PerformCallback('SC|")
-        res.Append(GetFieldIndex(c)).Append("|").Append(c.ValueItem.IsColumn).Append("|").Append(c.ValueItem.VisibleIndex).Append("|").Append(c.ValueItem.DataIndex)
+        res.Append(GetFieldIndex(c.ValueItem)).Append("|").Append(c.ValueItem.IsColumn).Append("|").Append(c.ValueItem.MaxLastLevelIndex).Append("|").Append(c.ValueItem.DataIndex)
         res.Append("');")
         Return res.ToString()
     End Function
 
-    Private Function GetFieldIndex(ByVal c As PivotGridFieldValueTemplateContainer) As Integer
-        Return If(c.ValueItem.Field IsNot Nothing, c.ValueItem.Field.Index, -1)
+    Private Function GetFieldIndex(ByVal valueItem As PivotFieldValueItem) As Integer
+        If valueItem Is Nothing OrElse valueItem.Field Is Nothing Then
+            Return -1 ' Grand Total Cell
+        End If
+        If valueItem.IsDataFieldItem Then
+            Return GetFieldIndex(valueItem.Parent) 'Find the parent field of a Data Field cell
+        End If
+        Return valueItem.Field.Index
     End Function
-
     #End Region
 End Class
