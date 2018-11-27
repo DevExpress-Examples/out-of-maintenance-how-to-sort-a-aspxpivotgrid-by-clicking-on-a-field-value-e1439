@@ -19,8 +19,9 @@ public partial class _Default : System.Web.UI.Page {
     }
     protected void ASPxPivotGrid1_CustomCallback(object sender, PivotGridCustomCallbackEventArgs e) {
         string[] args = e.Parameters.Split('|');
-        if (args[0] == "SC")
+        if (args[0] == "SC"){
             HandleSortByColumnClick((ASPxPivotGrid)sender, args);
+		}
     }
 
     void HandleSortByColumnClick(ASPxPivotGrid pivotGrid, string[] args) {
