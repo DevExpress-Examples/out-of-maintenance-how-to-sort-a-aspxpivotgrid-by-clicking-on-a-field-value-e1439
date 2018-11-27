@@ -55,10 +55,10 @@ public partial class _Default : System.Web.UI.Page {
         pivotGrid.EndUpdate();
     }
 
-    void GetFieldsAndValues(ASPxPivotGrid pivotGrid, int fieldIndex, int visibleIndex, int dataIndex, PivotArea area, out PivotGridField dataField, out List<PivotGridField> fields, out List<object> values) {
-        dataField = pivotGrid.GetFieldByArea(PivotArea.DataArea, dataIndex);        
+    void GetFieldsAndValues(ASPxPivotGrid pivotGrid, int fieldIndex, int visibleIndex, int dataIndex, PivotArea area, out PivotGridField dataField, out List<PivotGridField> fields, out List<object> values) {        
         fields = new List<PivotGridField>();
         values = new List<object>();
+		dataField = pivotGrid.GetFieldByArea(PivotArea.DataArea, dataIndex);        
         if (fieldIndex >= 0) {
             var clickedField = pivotGrid.Fields[fieldIndex];
             for (int i = 0; i <= clickedField.AreaIndex; i++) {
