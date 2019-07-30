@@ -6,7 +6,7 @@
 <!-- default file list end -->
 # How to sort a ASPxPivotGrid by clicking on a field value
 <!-- run online -->
-**[[Run Online]](https://codecentral.devexpress.com/e1439)**
+**[[Run Online]](https://codecentral.devexpress.com/e1439/)**
 <!-- run online end -->
 
 
