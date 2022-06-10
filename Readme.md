@@ -3,29 +3,19 @@
 [![](https://img.shields.io/badge/Open_in_DevExpress_Support_Center-FF7200?style=flat-square&logo=DevExpress&logoColor=white)](https://supportcenter.devexpress.com/ticket/details/E1439)
 [![](https://img.shields.io/badge/📖_How_to_use_DevExpress_Examples-e9f6fc?style=flat-square)](https://docs.devexpress.com/GeneralInformation/403183)
 <!-- default badges end -->
-<!-- default file list -->
-*Files to look at*:
+## Pivot Grid for Web Forms - How to Sort a PivotGrid by Clicking on a Field Value
 
-* [Default.aspx](./CS/Default.aspx) (VB: [Default.aspx.vb](./VB/Default.aspx.vb))
-* [Default.aspx.cs](./CS/Default.aspx.cs) (VB: [Default.aspx.vb](./VB/Default.aspx.vb))
-<!-- default file list end -->
-# How to sort a ASPxPivotGrid by clicking on a field value
-<!-- run online -->
-**[[Run Online]](https://codecentral.devexpress.com/e1439/)**
-<!-- run online end -->
+The PivotGrid allows sorting by any column. To do this, right click any field value and select an appropriate field to sort by it. Sometimes it is possible to sort by any column by simply clicking on it. This example shows how to implement this behavior. 
 
-
-<p>The PivotGrid allows sorting by any column. To do this, right click any field value and select an appropriate field to sort by it. Sometimes it is possible to sort by any column by simply clicking on it. This example shows how to implement this behavior. You should create a template for field values to place a hyperlink (or a button) rather than a plain text.</p>
+Create a template for field values to place a hyperlink (or a button) rather than a plain text. Use the pivot grid's [FieldValueTemplate](https://docs.devexpress.com/AspNet/DevExpress.Web.ASPxPivotGrid.ASPxPivotGrid.FieldValueTemplate) property.
 
 
 ```cs
 ASPxPivotGrid1.FieldValueTemplate = new FieldValueTemplate(ASPxPivotGrid1);
-
-
 ```
 
 
-<p>The FieldValueTemplate class should implement the ITemplate interface. We've replaced standard contents of a field value in the InstantiateIn method.</p>
+The *FieldValueTemplate* class should implement the [ITemplate](https://docs.microsoft.com/en-us/dotnet/api/system.web.ui.itemplate?view=netframework-4.8) interface. Replace standard contents of a field value in the *InstantiateIn* method.
 
 
 ```cs
@@ -79,11 +69,10 @@ public class FieldValueTemplate : ITemplate {
     }
     #endregion
 }
-
 ```
 
 
-<p>The GetOnClickHandler method returns a javascript code that will perform a ASPxPivotGrid's callback passing all required parameters to the server. On the server side, you should handle the CustomCallback event handler and apply sorting to it.</p>
+The *GetOnClickHandler* method returns a JavaScript code that will perform a ASPxPivotGrid's callback passing all required parameters to the server. On the server side, handle the *CustomCallback* event handler and apply sorting to it.
 
 
 ```cs
@@ -128,7 +117,7 @@ public class FieldValueTemplate : ITemplate {
 ```
 
 
-<p>Sorting can be set by filling the SortBySummaryInfo structure. The BeginUpdate/EndUpdate method calls are necessary to prevent multiple data recalculations.</p>
+Sorting can be set by filling the *SortBySummaryInfo* structure. The BeginUpdate/EndUpdate method calls are necessary to prevent multiple data recalculations.
 
 
 ```cs
@@ -146,7 +135,7 @@ public class FieldValueTemplate : ITemplate {
         pivotGrid.EndUpdate();
     }
 ```
+## Files to Look At
 
-<br/>
-
-
+- [Default.aspx](./CS/Default.aspx) (VB: [Default.aspx.vb](./VB/Default.aspx.vb))
+- [Default.aspx.cs](./CS/Default.aspx.cs) (VB: [Default.aspx.vb](./VB/Default.aspx.vb))
