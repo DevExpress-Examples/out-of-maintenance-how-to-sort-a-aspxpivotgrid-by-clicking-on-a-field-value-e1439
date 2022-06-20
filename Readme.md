@@ -14,109 +14,12 @@ ASPxPivotGrid1.FieldValueTemplate = new FieldValueTemplate(ASPxPivotGrid1);
 ```
 
 
-The *FieldValueTemplate* class should implement the [ITemplate](https://docs.microsoft.com/en-us/dotnet/api/system.web.ui.itemplate?view=netframework-4.8) interface. Replace standard contents of a field value in the *InstantiateIn* method.
+The *FieldValueTemplate* class should implement the [ITemplate](https://docs.microsoft.com/en-us/dotnet/api/system.web.ui.itemplate?view=netframework-4.8) interface. Replace standard contents of a field value in the *InstantiateIn* method (see [Default.aspx.cs](./CS/Default.aspx.cs#L82-L131)/[Default.aspx.vb](./VB/Default.aspx.vb#L81-L134)).
 
 
-```cs
-public class FieldValueTemplate : ITemplate {
-    public FieldValueTemplate(ASPxPivotGrid pivotGrid) {
-        this.pivotGrid = pivotGrid;
-    }
+The *GetOnClickHandler* method returns a JavaScript code that will perform a ASPxPivotGrid's callback passing all required parameters to the server. On the server side, handle the *CustomCallback* event handler and apply sorting to it (see [Default.aspx.cs](./CS/Default.aspx.cs#L20-L71)/[Default.aspx.vb](./VB/Default.aspx.vb#L24-L70)).
 
-    ASPxPivotGrid pivotGrid;
-    protected ASPxPivotGrid PivotGrid { get { return pivotGrid; } }
-
-    #region ITemplate Members
-
-    public void InstantiateIn(Control container) {
-        PivotGridFieldValueTemplateContainer c = (PivotGridFieldValueTemplateContainer)container;
-        PivotGridFieldValueHtmlCell cell = c.CreateFieldValue();
-        if (c.ValueItem.CanShowSortBySummary && !c.ValueItem.IsAnyFieldSortedByThisValue) {
-            cell.Controls.AddAt(cell.Controls.IndexOf(cell.TextControl), GetHyperLink(c));
-            cell.Controls.Remove(cell.TextControl);
-        }
-        c.Controls.Add(cell);
-    }
-
-    private Control GetHyperLink(PivotGridFieldValueTemplateContainer c) {
-        HyperLink link = new HyperLink();
-        link.Text = (string)c.Text;
-        link.NavigateUrl = "#";
-        link.Attributes["onclick"] = GetOnClickHandler(c);
-        return link;
-    }
-
-    string GetOnClickHandler(PivotGridFieldValueTemplateContainer c) {
-        StringBuilder res = new StringBuilder();
-        res.Append(pivotGrid.ClientInstanceName).Append(".PerformCallback('SC|");
-        res.Append(GetFieldIndex(c.ValueItem)).Append("|")
-            .Append(c.ValueItem.IsColumn).Append("|")
-            .Append(c.ValueItem.MaxLastLevelIndex).Append("|")
-            .Append(c.ValueItem.DataIndex);
-        res.Append("');");
-        return res.ToString();
-    }
-
-    private int GetFieldIndex(PivotFieldValueItem valueItem) {
-        if( valueItem == null || valueItem.Field == null) {
-            return -1; // Grand Total Cell
-        }
-        if (valueItem.IsDataFieldItem) {
-            return GetFieldIndex(valueItem.Parent); //Find the parent field of a Data Field cell
-        }
-        return valueItem.Field.Index;
-    }
-    #endregion
-}
-```
-
-
-The *GetOnClickHandler* method returns a JavaScript code that will perform a ASPxPivotGrid's callback passing all required parameters to the server. On the server side, handle the *CustomCallback* event handler and apply sorting to it.
-
-
-```cs
-    protected void ASPxPivotGrid1_CustomCallback(object sender, PivotGridCustomCallbackEventArgs e) {
-        string[] args = e.Parameters.Split('|');
-        if (args[0] == "SC")
-            HandleSortByColumnClick((ASPxPivotGrid)sender, args);
-    }
-
-    void HandleSortByColumnClick(ASPxPivotGrid pivotGrid, string[] args) {
-        int fieldIndex = int.Parse(args[1]),
-            visibleIndex = int.Parse(args[3]),
-            dataIndex = int.Parse(args[4]);
-        bool isColumn = bool.Parse(args[2]);
-        PivotArea area = GetArea(isColumn),
-            crossArea = GetCrossArea(isColumn);
-
-        PivotGridField dataField;
-        List<PivotGridField> fields;
-        List<object> values;
-        GetFieldsAndValues(pivotGrid, fieldIndex, visibleIndex, dataIndex, area,
-            out dataField, out fields, out values);
-
-        SetSortByColumn(pivotGrid, crossArea, dataField, fields, values);
-    }
-    
-    void GetFieldsAndValues(ASPxPivotGrid pivotGrid, int fieldIndex, int visibleIndex, int dataIndex, PivotArea area, out PivotGridField dataField, out List<PivotGridField> fields, out List<object> values) {
-        dataField = pivotGrid.GetFieldByArea(PivotArea.DataArea, dataIndex);        
-        fields = new List<PivotGridField>();
-        values = new List<object>();
-        if (fieldIndex >= 0) {
-            var clickedField = pivotGrid.Fields[fieldIndex];
-            for (int i = 0; i <= clickedField.AreaIndex; i++) {
-                var field = pivotGrid.GetFieldByArea(area, i);
-                fields.Add(field);
-                object value = pivotGrid.GetFieldValue(field, visibleIndex);
-                values.Add(value);
-            }
-        }
-    }
-
-```
-
-
-Sorting can be set by filling the *SortBySummaryInfo* structure. The BeginUpdate/EndUpdate method calls are necessary to prevent multiple data recalculations.
+Sorting can be set by filling the *SortBySummaryInfo* structure. The BeginUpdate/EndUpdate method calls are necessary to prevent multiple data recalculations:
 
 
 ```cs
