@@ -4,7 +4,7 @@
 <!-- default badges end -->
 # Pivot Grid for Web Forms - How to Sort a PivotGrid by Clicking on a Field Value
 
-The PivotGrid allows sorting by any column. To do this, right click any field value and select an appropriate field to sort by it. Sometimes it is possible to sort by any column by simply clicking on it. This example shows how to implement this behavior. 
+The PivotGrid allows to sort by any column. To do this, right click any field value and select an appropriate field to sort by. Sometimes it is possible to sort by any column by clicking on it. This example shows how to implement this behavior. 
 
 Create a template for field values to place a hyperlink (or a button) rather than a plain text. Use the pivot grid's [FieldValueTemplate](https://docs.devexpress.com/AspNet/DevExpress.Web.ASPxPivotGrid.ASPxPivotGrid.FieldValueTemplate) property.
 
