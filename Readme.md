@@ -1,12 +1,4 @@
-<!-- default badges list -->
-![](https://img.shields.io/endpoint?url=https://codecentral.devexpress.com/api/v1/VersionRange/128577852/21.2.3%2B)
-[![](https://img.shields.io/badge/Open_in_DevExpress_Support_Center-FF7200?style=flat-square&logo=DevExpress&logoColor=white)](https://supportcenter.devexpress.com/ticket/details/E1439)
-[![](https://img.shields.io/badge/📖_How_to_use_DevExpress_Examples-e9f6fc?style=flat-square)](https://docs.devexpress.com/GeneralInformation/403183)
-<!-- default badges end -->
 # Pivot Grid for Web Forms - How to Sort a PivotGrid by Clicking on a Field Value
-<!-- run online -->
-**[[Run Online]](https://codecentral.devexpress.com/e1439/)**
-<!-- run online end -->
 
 The PivotGrid allows you to sort by any column. To do this, right click any field value and select an appropriate field by which to sort. Sometimes it is possible to sort by any column by clicking on it. This example shows how to implement this behavior.
 
